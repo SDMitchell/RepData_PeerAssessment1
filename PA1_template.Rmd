@@ -7,16 +7,30 @@ output:
 
 
 ## Loading and preprocessing the data
-
-
+```{r}
+targetFilename <- file.path(".", "activity.csv")
+data <- read.csv(targetFilename, header=TRUE, sep=",", stringsAsFactors=FALSE, na.strings="NA", colClasses=c("numeric", "Date", "numeric"))
+```
 
 ## What is mean total number of steps taken per day?
-
-
+```{r}
+stepsPerDay <- aggregate(steps ~ date, data=data, FUN=sum)
+hist(stepsPerDay$steps, breaks=12)
+meanStepsPerDay <- mean(stepsPerDay$steps)
+medianStepsPerDay <- median(stepsPerDay$steps)
+```
 
 ## What is the average daily activity pattern?
-
-
+```{r}
+meanStepsPerInterval <- aggregate(steps ~ interval, data=data, FUN=mean)
+plot(x=meanStepsPerInterval$interval, y=meanStepsPerInterval$steps, type="l")
+meanStepsPerInterval <- aggregate(steps ~ interval, data=data, FUN=mean)
+rowWithHighestAverage <- meanStepsPerInterval[meanStepsPerInterval$steps==max(meanStepsPerInterval$steps), ]
+intervalWithHighestAverage <- rowWithHighestAverage$interval
+abline(v=intervalWithHighestAverage, col="red")
+```
+  
+The interval with the largest mean number of steps is the `r intervalWithHighestAverage`th interval, as marked by the red vertical line in the plot.
 
 ## Imputing missing values
 
