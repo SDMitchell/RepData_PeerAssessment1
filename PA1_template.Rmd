@@ -6,6 +6,7 @@ output:
 ---
 
 ```{r echo=FALSE}
+library(ggplot2)
 options(digits=2, scipen=1)
 ```
 
@@ -34,7 +35,6 @@ medianStepsPerDay <- median(stepsPerDay$steps)
 ```{r}
 meanStepsPerInterval <- aggregate(steps ~ interval, data=data, FUN=mean)
 plot(x=meanStepsPerInterval$interval, y=meanStepsPerInterval$steps, type="l")
-meanStepsPerInterval <- aggregate(steps ~ interval, data=data, FUN=mean)
 rowWithHighestAverage <- meanStepsPerInterval[meanStepsPerInterval$steps==max(meanStepsPerInterval$steps), ]
 intervalWithHighestAverage <- rowWithHighestAverage$interval
 abline(v=intervalWithHighestAverage, col="red")
@@ -50,7 +50,8 @@ numberOfRowsMissingData <- dim(data)[1] - dim(data[complete.cases(data), ])[1]
 The input data contains `r numberOfRowsMissingData` incomplete samples. We have already computed the mean number of steps per interval, so we are going to impute the incomplete "steps" values using those means.
   
 ```{r}
-imputedData <- within(data, {steps <- ifelse(is.na(steps), meanStepsPerInterval[meanStepsPerInterval$interval == interval, "steps"], steps)})
+rownames(meanStepsPerInterval) <- meanStepsPerInterval$interval
+imputedData <- within(data, {steps <- ifelse(is.na(steps), meanStepsPerInterval[as.character(interval), "steps"], steps)})
 imputedStepsPerDay <- aggregate(steps ~ date, data=imputedData, FUN=sum)
 hist(imputedStepsPerDay$steps, breaks=12)
 imputedMeanStepsPerDay <- mean(imputedStepsPerDay$steps)
@@ -58,8 +59,27 @@ imputedMedianStepsPerDay <- median(imputedStepsPerDay$steps)
 ```
   
 * The mean number of steps per day after imputation of the NA values is $`r imputedMeanStepsPerDay`$ steps. This is identical to the original result, which makes sense because we used the mean of the original result to fill in the missing results; adding in more of the exact same number can't possibly result in a different result.
-* The median number of steps per day after imputation of the NA values is $`r imputedMedianStepsPerDay`$ steps. It makes sense that this increased somewhat due to the fact that we have now inserted several new, identical samples just above the old median causing it to shift upward slightly.
+* The median number of steps per day after imputation of the NA values is $`r imputedMedianStepsPerDay`$ steps. It makes sense that this now matches the mean due to the fact that we have now inserted several new, identical samples just above the old median causing it to shift.
   
 The impact of imputing the missing data using the method chosen seems to have had very little overall impact on the summaries of the data sets. If the sampling failures were due to a sensor malfunction, it seems that this is a good candidate algorithm to fill in the missing steps data.
   
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r}
+imputedData <- cbind(imputedData, as.factor(ifelse(as.POSIXlt(imputedData$date)$wd %in% c(0, 6), "Weekend", "Weekday")))
+colnames(imputedData)[4] <- "TypeOfDay"
+
+g <- ggplot(imputedData, aes(interval, steps))
+g <- g + geom_line(aes(group=TypeOfDay)) +
+	facet_wrap(~TypeOfDay, ncol=1) +
+	labs(x = "Interval", y = "Number of Steps", title="Activity Comparison: Weekdays vs Weekends") +
+	theme(panel.background = element_rect(fill = "#FFFAF0", colour = "#000000"), plot.background = element_rect(fill = "#FFFAF0", colour = "#000000"), panel.grid.major = element_line(colour="#FFDEAD"))
+g
+```
+
+
+
+
+
+
+
+
