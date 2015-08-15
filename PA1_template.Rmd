@@ -5,13 +5,20 @@ output:
     keep_md: true
 ---
 
+```{r echo=FALSE}
+options(digits=2, scipen=1)
+```
 
 ## Loading and preprocessing the data
 ```{r}
 targetFilename <- file.path(".", "activity.csv")
 data <- read.csv(targetFilename, header=TRUE, sep=",", stringsAsFactors=FALSE, na.strings="NA", colClasses=c("numeric", "Date", "numeric"))
 ```
-
+    
+* steps is the number of steps taken in that interval
+* date is the date on which the measurement occured
+* interval is the wall time in five minute increments in 24h time with no separator (e.g. 1350 is 1:30 PM)
+  
 ## What is mean total number of steps taken per day?
 ```{r}
 stepsPerDay <- aggregate(steps ~ date, data=data, FUN=sum)
@@ -19,7 +26,10 @@ hist(stepsPerDay$steps, breaks=12)
 meanStepsPerDay <- mean(stepsPerDay$steps)
 medianStepsPerDay <- median(stepsPerDay$steps)
 ```
-
+  
+* The mean number of steps per day is $`r meanStepsPerDay`$ steps
+* The median number of steps per day is $`r medianStepsPerDay`$ steps
+  
 ## What is the average daily activity pattern?
 ```{r}
 meanStepsPerInterval <- aggregate(steps ~ interval, data=data, FUN=mean)
@@ -31,9 +41,25 @@ abline(v=intervalWithHighestAverage, col="red")
 ```
   
 The interval with the largest mean number of steps is the `r intervalWithHighestAverage`th interval, as marked by the red vertical line in the plot.
-
+  
 ## Imputing missing values
-
-
-
+```{r}
+numberOfRowsMissingData <- dim(data)[1] - dim(data[complete.cases(data), ])[1]
+```
+  
+The input data contains `r numberOfRowsMissingData` incomplete samples. We have already computed the mean number of steps per interval, so we are going to impute the incomplete "steps" values using those means.
+  
+```{r}
+imputedData <- within(data, {steps <- ifelse(is.na(steps), meanStepsPerInterval[meanStepsPerInterval$interval == interval, "steps"], steps)})
+imputedStepsPerDay <- aggregate(steps ~ date, data=imputedData, FUN=sum)
+hist(imputedStepsPerDay$steps, breaks=12)
+imputedMeanStepsPerDay <- mean(imputedStepsPerDay$steps)
+imputedMedianStepsPerDay <- median(imputedStepsPerDay$steps)
+```
+  
+* The mean number of steps per day after imputation of the NA values is $`r imputedMeanStepsPerDay`$ steps. This is identical to the original result, which makes sense because we used the mean of the original result to fill in the missing results; adding in more of the exact same number can't possibly result in a different result.
+* The median number of steps per day after imputation of the NA values is $`r imputedMedianStepsPerDay`$ steps. It makes sense that this increased somewhat due to the fact that we have now inserted several new, identical samples just above the old median causing it to shift upward slightly.
+  
+The impact of imputing the missing data using the method chosen seems to have had very little overall impact on the summaries of the data sets. If the sampling failures were due to a sensor malfunction, it seems that this is a good candidate algorithm to fill in the missing steps data.
+  
 ## Are there differences in activity patterns between weekdays and weekends?
