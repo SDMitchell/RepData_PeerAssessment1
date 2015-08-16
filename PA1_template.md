@@ -87,7 +87,9 @@ The impact of imputing the missing data using the method chosen seems to have ha
 imputedDataToPlot <- cbind(imputedData, as.factor(ifelse(as.POSIXlt(imputedData$date)$wd %in% c(0, 6), "Weekend", "Weekday")))
 colnames(imputedDataToPlot)[4] <- "TypeOfDay"
 
-g <- ggplot(imputedDataToPlot, aes(interval, steps))
+imputedMeanStepsPerInterval <- aggregate(steps ~ interval+TypeOfDay, data=imputedDataToPlot, FUN=mean)
+
+g <- ggplot(imputedMeanStepsPerInterval, aes(interval, steps))
 g <- g + geom_line(aes(group=TypeOfDay)) +
 	facet_wrap(~TypeOfDay, ncol=1) +
 	labs(x = "Interval", y = "Number of Steps", title="Activity Comparison: Weekdays vs Weekends") +
