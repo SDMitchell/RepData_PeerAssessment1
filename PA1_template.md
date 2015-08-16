@@ -21,7 +21,7 @@ data <- read.csv(targetFilename, header=TRUE, sep=",", stringsAsFactors=FALSE, n
 
 ```r
 stepsPerDay <- aggregate(steps ~ date, data=data, FUN=sum)
-hist(stepsPerDay$steps, breaks=12, xlab="Steps", main="Mean Total Number of Steps Taken Per Day")
+hist(stepsPerDay$steps, breaks=12, xlab="Steps", main="Distribution of Total Number of Steps Taken Per Day")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
@@ -33,6 +33,8 @@ medianStepsPerDay <- median(stepsPerDay$steps)
   
 * The mean number of steps per day is 10766.19 steps
 * The median number of steps per day is 10765 steps
+  
+*Note that aggregate() by default (as used here) will omit any rows containing NA values.*
   
 ## What is the average daily activity pattern?
   
@@ -63,7 +65,7 @@ The input data contains 2304 incomplete samples. We have already computed the me
 rownames(meanStepsPerInterval) <- meanStepsPerInterval$interval
 imputedData <- within(data, {steps <- ifelse(is.na(steps), meanStepsPerInterval[as.character(interval), "steps"], steps)})
 imputedStepsPerDay <- aggregate(steps ~ date, data=imputedData, FUN=sum)
-hist(imputedStepsPerDay$steps, breaks=12, xlab="Steps", main="Mean Total Number of Steps Taken Per Day (with imputations)")
+hist(imputedStepsPerDay$steps, breaks=12, xlab="Steps", main="Distribution of Total Number of Steps Taken Per Day (with imputations)")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
@@ -73,10 +75,10 @@ imputedMeanStepsPerDay <- mean(imputedStepsPerDay$steps)
 imputedMedianStepsPerDay <- median(imputedStepsPerDay$steps)
 ```
   
-* The mean number of steps per day after imputation of the NA values is 10766.19 steps. This is identical to the original result, which makes sense because we used the mean of the original data to fill in the missing results; adding in more of the exact same number can't possibly result in a different value.
+* The mean number of steps per day after imputation of the NA values is 10766.19 steps. This is identical to the original result, which makes sense because we used the mean of the original data to fill in the missing results; adding in more of the exact same number can't possibly result in a different value if we are filling in complete days worth of missing values (this data set seemed to be missing data for entire days, not sporadic intervals for the same day).
 * The median number of steps per day after imputation of the NA values is 10766.19 steps. It makes sense that this now matches the mean due to the fact that we have inserted several new, identical samples at the mean causing the median to shift to the new value. This tells us that there are more NAs in the original data than any other single value (which is not unlikely).
   
-The impact of imputing the missing data using the method chosen seems to have had very little overall impact on the summaries of the data sets. If the sampling failures were due to a sensor malfunction, it seems that this is a good candidate algorithm to fill in the missing steps data.
+The impact of imputing the missing data using the method chosen seems to have had very little overall impact on the summaries of the data sets. If the sampling failures were due to a sensor malfunction, it seems that this is a good candidate algorithm to fill in the missing steps data. It should be noted that this was the best possible outcome for this algorithm, as data were missing for days in their entirety.
   
 ## Are there differences in activity patterns between weekdays and weekends?
   
