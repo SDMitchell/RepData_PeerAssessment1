@@ -87,7 +87,7 @@ g <- g + geom_line(aes(group=TypeOfDay)) +
 g
 ```
   
-It would seem that the differences in activity pattern during the weekends and weekdays mostly centers around sleeping in during the weekends (and therefore less activity in the earlier morning hours). There is also slightly more activity during weeknights, which could correspond to working later or perhaps running errands later at night due to work commitments.
+It would seem that the differences in activity pattern during the weekends and weekdays mostly centers around sleeping in during the weekends (and therefore less activity in the earlier morning hours). There is also slightly more activity during nights on weekends, which could correspond to going out for entertainment purposes instead of going to bed early.
   
   
   
