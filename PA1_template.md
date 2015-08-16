@@ -31,8 +31,8 @@ meanStepsPerDay <- mean(stepsPerDay$steps)
 medianStepsPerDay <- median(stepsPerDay$steps)
 ```
   
-* The mean number of steps per day is $10766.19$ steps
-* The median number of steps per day is $10765$ steps
+* The mean number of steps per day is 10766.19 steps
+* The median number of steps per day is 10765 steps
   
 ## What is the average daily activity pattern?
   
@@ -73,8 +73,8 @@ imputedMeanStepsPerDay <- mean(imputedStepsPerDay$steps)
 imputedMedianStepsPerDay <- median(imputedStepsPerDay$steps)
 ```
   
-* The mean number of steps per day after imputation of the NA values is $10766.19$ steps. This is identical to the original result, which makes sense because we used the mean of the original data to fill in the missing results; adding in more of the exact same number can't possibly result in a different value.
-* The median number of steps per day after imputation of the NA values is $10766.19$ steps. It makes sense that this now matches the mean due to the fact that we have inserted several new, identical samples at the mean causing the median to shift to the new value. This tells us that there are more NAs in the original data than any other single value (which is not unlikely).
+* The mean number of steps per day after imputation of the NA values is 10766.19 steps. This is identical to the original result, which makes sense because we used the mean of the original data to fill in the missing results; adding in more of the exact same number can't possibly result in a different value.
+* The median number of steps per day after imputation of the NA values is 10766.19 steps. It makes sense that this now matches the mean due to the fact that we have inserted several new, identical samples at the mean causing the median to shift to the new value. This tells us that there are more NAs in the original data than any other single value (which is not unlikely).
   
 The impact of imputing the missing data using the method chosen seems to have had very little overall impact on the summaries of the data sets. If the sampling failures were due to a sensor malfunction, it seems that this is a good candidate algorithm to fill in the missing steps data.
   

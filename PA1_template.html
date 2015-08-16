@@ -85,8 +85,8 @@ hist(stepsPerDay$steps, breaks=12, xlab=&quot;Steps&quot;, main=&quot;Mean Total
 <pre class="r"><code>meanStepsPerDay &lt;- mean(stepsPerDay$steps)
 medianStepsPerDay &lt;- median(stepsPerDay$steps)</code></pre>
 <ul>
-<li>The mean number of steps per day is <span class="math">\(10766.19\)</span> steps</li>
-<li>The median number of steps per day is <span class="math">\(10765\)</span> steps</li>
+<li>The mean number of steps per day is 10766.19 steps</li>
+<li>The median number of steps per day is 10765 steps</li>
 </ul>
 </div>
 <div id="what-is-the-average-daily-activity-pattern" class="section level2">
@@ -111,8 +111,8 @@ hist(imputedStepsPerDay$steps, breaks=12, xlab=&quot;Steps&quot;, main=&quot;Mea
 <pre class="r"><code>imputedMeanStepsPerDay &lt;- mean(imputedStepsPerDay$steps)
 imputedMedianStepsPerDay &lt;- median(imputedStepsPerDay$steps)</code></pre>
 <ul>
-<li>The mean number of steps per day after imputation of the NA values is <span class="math">\(10766.19\)</span> steps. This is identical to the original result, which makes sense because we used the mean of the original data to fill in the missing results; adding in more of the exact same number can’t possibly result in a different value.</li>
-<li>The median number of steps per day after imputation of the NA values is <span class="math">\(10766.19\)</span> steps. It makes sense that this now matches the mean due to the fact that we have inserted several new, identical samples at the mean causing the median to shift to the new value. This tells us that there are more NAs in the original data than any other single value (which is not unlikely).</li>
+<li>The mean number of steps per day after imputation of the NA values is 10766.19 steps. This is identical to the original result, which makes sense because we used the mean of the original data to fill in the missing results; adding in more of the exact same number can’t possibly result in a different value.</li>
+<li>The median number of steps per day after imputation of the NA values is 10766.19 steps. It makes sense that this now matches the mean due to the fact that we have inserted several new, identical samples at the mean causing the median to shift to the new value. This tells us that there are more NAs in the original data than any other single value (which is not unlikely).</li>
 </ul>
 <p>The impact of imputing the missing data using the method chosen seems to have had very little overall impact on the summaries of the data sets. If the sampling failures were due to a sensor malfunction, it seems that this is a good candidate algorithm to fill in the missing steps data.</p>
 </div>
